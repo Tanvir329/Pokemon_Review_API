@@ -30,4 +30,18 @@ public class ReviewController {
     public List<ReviewDto> getReviewsByPokemonId(@PathVariable(value = "pokemonId") int pokemonId){
         return reviewService.getReviewsByPokemonId(pokemonId);
     }
+
+    @GetMapping("/pokemon/{pokemonId}/detail_review/{reviewId}")
+    public ResponseEntity<ReviewDto> getReviewsById(@PathVariable(value = "reviewId") int reviewId, @PathVariable(value = "pokemonId") int pokemonId){
+        ReviewDto reviewDto = reviewService.getReviewsById(pokemonId, reviewId);
+        return new ResponseEntity<>(reviewDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/pokemon/{pokemonId}/update_review/{reviewId}")
+    public ResponseEntity<ReviewDto> getReviewsById(@PathVariable(value = "reviewId") int reviewId, @PathVariable(value = "pokemonId") int pokemonId, @RequestBody ReviewDto reviewDto){
+        ReviewDto updatedReview = reviewService.updateReview(reviewId, pokemonId, reviewDto);
+        return new ResponseEntity<>(updatedReview, HttpStatus.OK);
+    }
 }
+
+

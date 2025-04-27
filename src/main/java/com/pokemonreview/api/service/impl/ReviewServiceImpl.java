@@ -2,6 +2,7 @@ package com.pokemonreview.api.service.impl;
 
 import com.pokemonreview.api.dto.ReviewDto;
 import com.pokemonreview.api.exceptions.PokemonNotFoundException;
+import com.pokemonreview.api.exceptions.ReviewNotFoundException;
 import com.pokemonreview.api.models.Pokemon;
 import com.pokemonreview.api.models.Review;
 import com.pokemonreview.api.repository.PokemonRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -28,7 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto createReview(int pokemonId, ReviewDto reviewDto) {
         Review review = mapToEntity(reviewDto);
-        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated review could not be found"));
+        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated Id could not be found"));
         review.setPokemon(pokemon);
         Review newreview = reviewRepository.save(review);
         return mapToDto(newreview);
@@ -40,6 +42,30 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviews = reviewRepository.findByPokemonId(pokemonId);
 
         return reviews.stream().map(review -> mapToDto(review)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ReviewDto getReviewsById(int reviewId, int pokemonId) {
+        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated Id could not be found"));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Review with associated Id could not be found"));
+
+        if(review.getPokemon().getId() != pokemon.getId()){
+            throw new PokemonNotFoundException("This Pokemon does not belong to this Review");
+        }
+        return mapToDto(review);
+    }
+
+    @Override
+    public ReviewDto updateReview(int pokemonId, int reviewId, ReviewDto reviewDto) {
+        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated Id could not be found"));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Review with associated Id could not be found"));
+
+        review.setTitle(reviewDto.getTitle());
+        review.setContent(reviewDto.getContent());
+        review.setStars(reviewDto.getStars());
+
+        Review updatedReview = reviewRepository.save(review);
+        return mapToDto(updatedReview);
     }
 
     private ReviewDto mapToDto(Review review) {
