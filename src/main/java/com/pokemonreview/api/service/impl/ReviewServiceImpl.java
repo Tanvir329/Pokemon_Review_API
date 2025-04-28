@@ -90,7 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDto.setId(review.getId());
         reviewDto.setTitle(review.getTitle());
         reviewDto.setContent(review.getContent());
-        review.setStars(review.getStars());
+        reviewDto.setStars(review.getStars());
 
         return reviewDto;
     }
