@@ -44,8 +44,9 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream().map(review -> mapToDto(review)).collect(Collectors.toList());
     }
 
+
     @Override
-    public ReviewDto getReviewsById(int reviewId, int pokemonId) {
+    public ReviewDto getReviewById(int pokemonId, int reviewId) {
         Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated Id could not be found"));
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Review with associated Id could not be found"));
 
@@ -73,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(int reviewId, int pokemonId) {
+    public void deleteReview(int pokemonId, int reviewId) {
         Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new PokemonNotFoundException("Pokemon with associated Id could not be found"));
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Review with associated Id could not be found"));
 

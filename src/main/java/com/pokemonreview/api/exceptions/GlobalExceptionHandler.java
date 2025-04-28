@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
-    public ResponseEntity<ErrorObject>handleReviewNotFoundException(ReviewNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ErrorObject>handlePokemonNotFoundException(ReviewNotFoundException ex, WebRequest request) {
 
         ErrorObject errorObject = new ErrorObject();
 
@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
     }
+
 
     // For UnExpected Errors
     @ExceptionHandler(Exception.class)
